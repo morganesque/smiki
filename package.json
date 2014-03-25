@@ -1,0 +1,30 @@
+{
+  "name": "gulp",
+  "version": "0.0.1",
+  "description": "default for gulp projects",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "~3.4.0",
+    "gulp-util": "~2.2.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tom Morgan",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp-jekyll": "0.0.0",
+    "gulp-livereload": "~0.2.0",
+    "gulp-serve": "0.0.1",
+    "gulp-autoprefixer": "0.0.4",
+    "gulp-uglify": "~0.2.0",
+    "gulp-svgmin": "~0.4.1",
+    "gulp-imagemin": "~0.1.4",
+    "gulp-debug": "~0.1.2",
+    "tiny-lr": "0.0.5",
+    "gulp-browserify": "~0.3.4",
+    "gulp-concat": "~2.1.7",
+    "gulp-header": "~1.0.2",
+    "gulp-ruby-sass": "~0.4.0"
+  }
+}
