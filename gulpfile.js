@@ -173,11 +173,11 @@ gulp.task('watch', function() {
         })
 
         // Watch Jekyll files
-        // gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
-        // {
-        //     message(event,'');
-        //     gulp.run('jekyll'); 
-        // })
+        gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
+        {
+            message(event,'');
+            gulp.run('jekyll'); 
+        })
 
         gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
         {
