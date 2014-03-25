@@ -8,7 +8,7 @@ $(document).on("ready",function(e)
         var sel = current_textarea.textrange('get').text;
         if (!sel)
         {
-            alert('You need to select some text to turn into a link.');
+            alert('You need to select some text to turn into a link. – 0w12');
             return false;
         }
         showOverlay();
