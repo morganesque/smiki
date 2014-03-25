@@ -2,6 +2,7 @@ $(document).on("ready",function(e)
 {
     $('#add_link').on("click",function(e)
     {
+        console.log("on add_link click");        
         e.preventDefault();
         current_textarea = $('.editor');  
         var sel = current_textarea.textrange('get').text;
@@ -10,13 +11,11 @@ $(document).on("ready",function(e)
             alert('You need to select some text to turn into a link.');
             return false;
         }
-        $('.overlay').fadeIn();
-        $('#new_page__name').focus().val(current_textarea.textrange('get').text).textrange('set');     
+        showOverlay();
     });
 
     $('#view_page').on("click",function(e)
-    {
-        console.log(current_page.model.save());        
+    {        
         e.preventDefault();
         var id = current_page.model.get('id');
         current_page.model.save("id",id,{success:function()

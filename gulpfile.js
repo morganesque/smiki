@@ -52,7 +52,7 @@ gulp.task('jekyll',function()
         .pipe(jekyll({
             source: './build',
             destination: '.jekyll',
-            // bundleExec:true,
+            bundleExec:true,
         }))
         .pipe(gulp.dest('.jekyll'));
 });
@@ -179,11 +179,11 @@ gulp.task('watch', function() {
             gulp.run('jekyll'); 
         })
 
-        gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
-        {
-            message(event,'');
-            gulp.run('livereload'); 
-        })
+        // gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
+        // {
+        //     message(event,'');
+        //     gulp.run('livereload'); 
+        // })
 
         function message(event,name)
         {

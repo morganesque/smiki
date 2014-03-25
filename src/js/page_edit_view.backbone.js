@@ -102,7 +102,7 @@ var PageEditView = Backbone.View.extend(
 
     saveModel:function()
     {
-        console.log('saving');        
+        // console.log('saving');        
         this.model.save();
     },
 
