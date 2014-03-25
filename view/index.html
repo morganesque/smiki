@@ -1,3 +1,6 @@
+---
+layout: default
+---
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -6,12 +9,12 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
+        <title>Viewing</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="/css/styles.css">
-        <script src="/js/modernizr.js"></script>
+        <link rel="stylesheet" href="{{site.url}}css/styles.css">
+        <script src="{{site.url}}js/modernizr.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -33,14 +36,12 @@
 
             </div><!-- .grid -->
 
-            
-
         </div><!-- .jayz -->
         
-        <script src="/js/all.min.js"></script>
-        <script src="/js/page_edit_view.backbone.js"></script>
-        <script src="/js/autocomplete.backbone.js"></script>
-        <script src="/js/pages.mc.backbone.js"></script>
+        <script src="{{site.url}}js/all.min.js"></script>
+        <script src="{{site.url}}js/page_edit_view.backbone.js"></script>
+        <script src="{{site.url}}js/autocomplete.backbone.js"></script>
+        <script src="{{site.url}}js/pages.mc.backbone.js"></script>
 
         <script type="text/javascript">
 
@@ -54,9 +55,7 @@
             },
 
             showpage: function(a)
-            {
-                console.log('fish');        
-
+            {   
                 var i = the_pages.where({id:parseInt(a)});
                 if (i.length)
                 {

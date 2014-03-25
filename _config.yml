@@ -1,0 +1,7 @@
+name: Smiki
+markdown: redcarpet
+pygments: true
+# url: "/smiki/"
+# state: "live"
+url: "/"
+state: "local"

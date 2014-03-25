@@ -1,3 +1,6 @@
+---
+layout: default
+---
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -10,8 +13,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="css/styles.css">
-        <script src="js/modernizr.js"></script>
+        <link rel="stylesheet" href="{{site.url}}css/styles.css">
+        <script src="{{site.url}}js/modernizr.js"></script>
     </head>
     <body class="">
         <!--[if lt IE 7]>
@@ -60,15 +63,17 @@
                 </div>
         </div>
         
-        <script src="js/all.min.js"></script>
-        <script src="js/page_edit_view.backbone.js"></script>
-        <script src="js/autocomplete.backbone.js"></script>
-        <script src="js/pages.mc.backbone.js"></script>
-        <script src="js/controls.js"></script>
+        <script src="{{site.url}}js/all.min.js"></script>
+        <script src="{{site.url}}js/page_edit_view.backbone.js"></script>
+        <script src="{{site.url}}js/autocomplete.backbone.js"></script>
+        <script src="{{site.url}}js/pages.mc.backbone.js"></script>
+        <script src="{{site.url}}js/controls.js"></script>
 
         <script type="text/javascript">
 
-        localStorage.clear();
+        var SITEURL = "{{site.url}}";
+
+        // localStorage.clear();
 
         var the_pages = new Pages();
         the_pages.fetch();
@@ -156,7 +161,7 @@
 
                 var txt = current_textarea;
                 var sel = txt.textrange('get').text;
-                var url = '/view/#'+m.get('id');
+                var url = SITEURL+'view/#'+m.get('id');
                 var n = '['+ sel +']('+ url +')';
                 txt.textrange('replace',n);
                 current_page.processMarkdown();
@@ -202,6 +207,9 @@
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
         <!-- -->
+
+        {% if site.state == "local" %}
         <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+        {% endif %}
     </body>
 </html>

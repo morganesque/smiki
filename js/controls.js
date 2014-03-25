@@ -21,7 +21,7 @@ $(document).on("ready",function(e)
         var id = current_page.model.get('id');
         current_page.model.save("id",id,{success:function()
         {
-             window.location.href = '/view/#'+id;
+             window.location.href = SITEURL+'view/#'+id;
         }})
     });
 
