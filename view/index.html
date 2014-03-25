@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="/css/styles.css">
+        <script src="/js/modernizr.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="jayz">            
+            
+            <div class="grid viewing">
+
+                <div class="grid__item -left">
+
+                    <ul id="list"></ul><!-- #list -->
+
+                </div><div class="grid__item -right">
+
+                    <div id="preview" class="content_output"></div>                   
+
+                </div>
+
+            </div><!-- .grid -->
+
+            
+
+        </div><!-- .jayz -->
+        
+        <script src="/js/all.min.js"></script>
+        <script src="/js/page_edit_view.backbone.js"></script>
+        <script src="/js/autocomplete.backbone.js"></script>
+        <script src="/js/pages.mc.backbone.js"></script>
+
+        <script type="text/javascript">
+
+        var the_pages = new Pages();
+        the_pages.fetch();
+
+        var ViewApp = Backbone.Router.extend({
+
+            routes: {
+                ":id": "showpage"
+            },
+
+            showpage: function(a)
+            {
+                console.log('fish');        
+
+                var i = the_pages.where({id:parseInt(a)});
+                if (i.length)
+                {
+                    var m = i[0];
+                    var s = m.get('story');        
+
+                    var md = markdown.toHTML(s);
+                    var hh = '<h1>'+m.get('name')+'</h1>';
+                    $('#preview').html(hh+md);
+                } else {
+                    $('#preview').html('<h3>Page not found</h3><p>It might have been deleted.</p>');
+                }
+                
+            }
+        });
+
+        var app = new ViewApp();
+        // Backbone.history.start({pushState: true});
+        Backbone.history.start();
+
+        var ListView = Backbone.View.extend({
+            model: Pages,    
+            events: {
+                "click li a": "onClick"
+            },
+            render: function(){
+                var list = this.$el;
+                this.model.each(function(a,b,c)
+                {       
+                    var li = $('<li><a href="#'+a.get('id')+'">'+a.get('name')+'</a></li>');
+                    list.append(li);
+                });
+            },        
+            onClick:function(e)
+            {
+                e.preventDefault();
+                var h = $(e.currentTarget).attr('href');        
+                app.navigate(h,{trigger:true});
+            },
+        });
+
+        // var list = new ListView({model:the_pages, el:$('#list')}).render();
+            
+        // var c = the_pages.at(0).get('id');
+        // console.log(the_pages.at(0));        
+        // app.navigate(c,{trigger:true});
+
+        </script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+        <!-- -->
+        <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+    </body>
+</html>

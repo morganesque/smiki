@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="css/styles.css">
+        <script src="js/modernizr.js"></script>
+    </head>
+    <body class="">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="jayz">            
+
+            <div class="grid editting">
+
+                <div class="grid__item -left">
+
+                    <form id="open_page" class="form">
+                        <input id="label" class="input main" type="text" value="" placeholder="type a page name" />
+                    </form>
+                    
+                     <div id="content" class="edit_pane"></div>
+
+                     <div id="controls" class="controls">
+                        <p>
+                            <a href="#" class="button" id="add_link"><span class="icon icon-chain"></span> add link</a>
+                            <a href="#" class="button" id="view_page"><span class="icon icon-eye"></span> view page</a>
+                            <a href="#" class="button" id="delete_page"><span class="icon icon-times"></span> delete</a>
+                        </p>
+                        <p class="notes">
+                            CMD + L = create a new link<br />
+                            CMD + K = back to search box<br /><br />
+                            Search for "?" to see all pages.<br />
+                        </p>
+                     </div>
+
+                </div><div class="grid__item -right">
+
+                    <div id="preview" class="content_output"></div>                   
+
+                </div>
+
+            </div><!-- .grid -->
+        </div><!-- .jayz -->
+
+        <div class="overlay">
+                <div class="new_page">
+                    <form id="new_page__form" class="form">
+                        <p>Link to:</p>
+                        <input id="new_page__name" class="input" type="text" value="" placeholder="name of page" />
+                    </form>
+                </div>
+        </div>
+        
+        <script src="js/all.min.js"></script>
+        <script src="js/page_edit_view.backbone.js"></script>
+        <script src="js/autocomplete.backbone.js"></script>
+        <script src="js/pages.mc.backbone.js"></script>
+        <script src="js/controls.js"></script>
+
+        <script type="text/javascript">
+
+        localStorage.clear();
+
+        var the_pages = new Pages();
+        the_pages.fetch();
+
+        var current_page;
+        var current_textarea;     
+
+        function getNewId()
+        {
+            var id;
+            if (!the_pages.length) id  = 1;
+            else id = _.max(the_pages.pluck("id"))+1;
+
+            console.log(id);        
+            return id;
+        }
+
+        /*
+            the autocomplere handler for the #label input box.
+        */
+        new AutoCompleteView({
+            input: $("#label"), // your input field
+            model: the_pages, // your collection
+            onSelect: function(m)
+            {      
+                if (m.get('new') == true)
+                {
+                    var id = getNewId();
+                    m.set({'new':false,'time':_.now(),"id":id});
+                    the_pages.push(m) 
+                }
+
+                /*
+                    Display a page into the editting screen.
+                */
+                current_page = new PageEditView({model:m}); 
+                $('#content').html(current_page.el).fadeIn();  
+
+                /*
+                    Wait for someone to hit CMD + L
+                */
+                current_page.on('wrapLink',function(a,b,c)
+                {
+                    current_textarea = a;   
+                    var sel = current_textarea.textrange('get').text;
+                    if (!sel)
+                    {
+                        alert('You need to select some text to turn into a link.');
+                        return false;
+                    }
+                    $('.overlay').fadeIn();
+                    $('#new_page__name').focus().val(a.textrange('get').text).textrange('set');     
+                });
+
+                /*
+                    Put the cursor at the end of the textarea.
+                */
+                var ta = $('#content textarea');
+                ta.focus().textrange('setcursor',ta.val().length);  
+                $('#controls').fadeIn();                
+            }
+        }).render();
+
+
+        /*
+            The autocomplete handler for the New Link modal.
+        */
+        new AutoCompleteView({
+            itemView:LinkAutoCompleteItemView,
+            input: $("#new_page__name"), // your input field
+            model: the_pages, // your collection
+            onSelect: function(m)
+            {
+                $('.overlay').fadeOut();
+                // $('body').removeClass('shoverlay');                
+
+                if (m.get('new') == true)
+                {
+                    var id = getNewId();
+                    m.set({'new':false,'time':_.now(),"id":id});  
+
+                    m.save();
+                    the_pages.push(m) 
+                }
+
+                var txt = current_textarea;
+                var sel = txt.textrange('get').text;
+                var url = '/view/#'+m.get('id');
+                var n = '['+ sel +']('+ url +')';
+                txt.textrange('replace',n);
+                current_page.processMarkdown();
+            }
+        }).render();
+
+        /*
+            Try and give #label focus as soon as things are ready.
+        */        
+        $(document).on("ready",function(e) {$('#label').focus();});
+        
+        /*
+            Control a few bits based on whether the #label input has focus.
+        */        
+        $('#label').on("focus",function() {
+            $('#controls').fadeOut();
+            $('#content').fadeOut();
+            $('#preview').fadeOut();
+            $(this).addClass('active');
+        });
+        $('#label').on("blur",function()
+        {           
+            $('#content').fadeIn();
+            $(this).removeClass('active');
+        });
+
+        /*
+            Hide a few things to start with.
+        */        
+        $('.overlay').hide();
+        $('#preview').hide();
+        $('#controls').hide();
+
+        </script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+        <!-- -->
+        <script src="http://localhost:35729/livereload.js?snipver=1"></script>
+    </body>
+</html>
