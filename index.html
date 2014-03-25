@@ -179,15 +179,12 @@ layout: default
                 var n = '['+ sel +']('+ url +')';
                 txt.textrange('replace',n);
                 current_page.processMarkdown();
-
-                console.log('hiding after link creation');        
                 hideOverlay();
             }
         }).render();
 
         pageLinker.on('hide',function(e)
         {     
-            console.log('hiding on hide');        
             hideOverlay();
         });
 
