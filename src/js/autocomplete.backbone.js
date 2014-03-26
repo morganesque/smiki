@@ -203,7 +203,7 @@ var AutoCompleteView = Backbone.View.extend(
         this.input.val(label);
         this.currentText = label;
         this.onSelect(model);
-        this.hide();
+        this.$el.hide();
     },
 
     reset: function () {

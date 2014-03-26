@@ -14,13 +14,13 @@ var PageEditView = Backbone.View.extend(
     },
 
     onkeyup: function(e)
-    {
+    {      
         this.pressedKeys = [];
         this.processMarkdown();
     },
 
     onkeydown: function (e) 
-    {       
+    {               
         if (!this.listenToKeys) return;
 
         // CMD  = 91
@@ -34,15 +34,15 @@ var PageEditView = Backbone.View.extend(
         if ((pk[91] && pk[76]) || (pk[17] && pk[76])) // (CTRL|CMD) + L
         {
             e.preventDefault();
-            this.wrapAsLink();
+            this.pressedKeys = [];        
+            this.trigger('wrapLink',this.textarea);
         }
 
         if ((pk[91] && pk[75]) || (pk[17] && pk[75])) // CMD + K
         {
+            this.pressedKeys = [];
             $("#label").focus().textrange('set');
         }
-
-        // console.log(e.keyCode);        
     },
 
     onfocus:function()
@@ -102,12 +102,6 @@ var PageEditView = Backbone.View.extend(
 
     saveModel:function()
     {
-        // console.log('saving');        
         this.model.save();
-    },
-
-    wrapAsLink: function()
-    {
-        this.trigger('wrapLink',this.textarea);
-    },                          
+    },                        
 });
