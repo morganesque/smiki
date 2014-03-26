@@ -174,6 +174,7 @@ gulp.task('watch', function() {
 
         // Watch Jekyll files
         gulp.watch('build/**/*.{html,yml,md,mkd,markdown}',function(event)
+        // gulp.watch('build/**/*.*',function(event)
         {
             message(event,'');
             gulp.run('jekyll'); 
