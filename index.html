@@ -91,21 +91,18 @@ layout: default
             return id;
         }
 
-        var showingOverlay = false;
+        var linkRange;
 
         function showOverlay()
         {
             $('.overlay').fadeIn();
-            $('#new_page__name').focus().val(current_textarea.textrange('get').text).textrange('set');                 
-            showingOverlay = true;
+            linkRange = current_textarea.textrange('get');
+            $('#new_page__name').focus().val(linkRange.text).textrange('set');                 
         }
 
         function hideOverlay()
         {
-            $('.overlay').fadeOut();
-            showingOverlay = false;
-            // var o = current_textarea.textrange('get');
-            // current_textarea.focus().textrange('setcursor',o.end);  
+            
         }
 
         /*
@@ -161,7 +158,8 @@ layout: default
             input: $("#new_page__name"), // your input field
             model: the_pages, // your collection
             onSelect: function(m)
-            {                
+            {       
+                console.log('onSelect');                 
                 // $('body').removeClass('shoverlay');                
 
                 if (m.get('new') == true)
@@ -179,13 +177,15 @@ layout: default
                 var n = '['+ sel +']('+ url +')';
                 txt.textrange('replace',n);
                 current_page.processMarkdown();
-                hideOverlay();
+                $('.overlay').fadeOut();       
             }
         }).render();
 
         pageLinker.on('hide',function(e)
         {     
-            hideOverlay();
+            console.log('on Hide');        
+            $('.overlay').fadeOut();       
+            current_textarea.textrange('set',linkRange.start, linkRange.length);
         });
 
         /*
