@@ -26,7 +26,7 @@ layout: default
 
                 <div class="grid__item -left">
 
-                    <form id="open_page" class="form">
+                    <form id="open_page" class="form" onsubmit="javascript:return false;">
                         <input id="label" class="input main" type="text" value="" placeholder="type a page name" />
                     </form>
                     
@@ -56,7 +56,7 @@ layout: default
 
         <div class="overlay">
                 <div class="new_page">
-                    <form id="new_page__form" class="form">
+                    <form id="new_page__form" class="form" onsubmit="javascript:return false;">
                         <p>Link to:</p>
                         <input id="new_page__name" class="input" type="text" value="" placeholder="name of page" />
                     </form>
@@ -67,6 +67,7 @@ layout: default
         <script src="{{site.url}}js/page_edit_view.backbone.js"></script>
         <script src="{{site.url}}js/autocomplete.backbone.js"></script>
         <script src="{{site.url}}js/pages.mc.backbone.js"></script>
+        <script src="{{site.url}}js/editor_view.backbone.js"></script>
         <script src="{{site.url}}js/controls.js"></script>
 
         <script type="text/javascript">
@@ -78,116 +79,8 @@ layout: default
         var the_pages = new Pages();
         the_pages.fetch();
 
-        var current_page;
-        var current_textarea;     
-
-        function getNewId()
-        {
-            var id;
-            if (!the_pages.length) id  = 1;
-            else id = _.max(the_pages.pluck("id"))+1;
-
-            console.log(id);        
-            return id;
-        }
-
-        var linkRange;
-
-        function showOverlay()
-        {
-            $('.overlay').fadeIn();
-            linkRange = current_textarea.textrange('get');
-            $('#new_page__name').focus().val(linkRange.text).textrange('set');                 
-        }
-
-        function hideOverlay()
-        {
-            
-        }
-
-        /*
-            the autocomplere handler for the #label input box.
-        */
-        var pageNamer = new AutoCompleteView({
-            input: $("#label"), // your input field
-            model: the_pages, // your collection
-            onSelect: function(m)
-            {      
-                if (m.get('new') == true)
-                {
-                    var id = getNewId();
-                    m.set({'new':false,'time':_.now(),"id":id});
-                    the_pages.push(m) 
-                }
-
-                /*
-                    Display a page into the editting screen.
-                */
-                current_page = new PageEditView({model:m}); 
-                $('#content').html(current_page.el).fadeIn();  
-
-                /*
-                    Wait for someone to hit CMD + L
-                */
-                current_page.on('wrapLink',function(a,b,c)
-                {
-                    current_textarea = a;   
-                    var sel = current_textarea.textrange('get').text;
-                    if (!sel)
-                    {
-                        alert('You need to select some text to turn into a link. – 0w67');
-                        return false;
-                    }
-                    showOverlay();
-                });
-
-                /*
-                    Put the cursor at the end of the textarea.
-                */
-                var ta = $('#content textarea');
-                ta.focus().textrange('setcursor',ta.val().length);  
-                $('#controls').fadeIn();                
-            }
-        }).render();
-
-        /*
-            The autocomplete handler for the New Link modal.
-        */
-        var pageLinker = new AutoCompleteView({
-            itemView:LinkAutoCompleteItemView,
-            input: $("#new_page__name"), // your input field
-            model: the_pages, // your collection
-            onSelect: function(m)
-            {       
-                console.log('onSelect');                 
-                // $('body').removeClass('shoverlay');                
-
-                if (m.get('new') == true)
-                {
-                    var id = getNewId();
-                    m.set({'new':false,'time':_.now(),"id":id});  
-
-                    m.save();
-                    the_pages.push(m) 
-                }
-
-                var txt = current_textarea;
-                var sel = txt.textrange('get').text;
-                var url = SITEURL+'view/#'+m.get('id');
-                var n = '['+ sel +']('+ url +')';
-                txt.textrange('replace',n);
-                current_page.processMarkdown();
-                $('.overlay').fadeOut();       
-            }
-        }).render();
-
-        pageLinker.on('hide',function(e)
-        {     
-            console.log('on Hide');        
-            $('.overlay').fadeOut();       
-            current_textarea.textrange('set',linkRange.start, linkRange.length);
-        });
-
+        var page_editor = new EditorView({model:the_pages});
+        
         /*
             Try and give #label focus as soon as things are ready.
         */        

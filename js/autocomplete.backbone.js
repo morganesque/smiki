@@ -49,7 +49,8 @@ var AutoCompleteView = Backbone.View.extend(
     currentText: "",
     itemView: AutoCompleteItemView,
 
-    initialize: function (options) {
+    initialize: function (options) 
+    {
         _.extend(this, options);
         this.filter = _.debounce(this.filter, this.wait);
     },
@@ -103,21 +104,18 @@ var AutoCompleteView = Backbone.View.extend(
 
         if (this.isChanged(keyword)) 
         {    
-            // console.log('changed');        
             if (this.isValid(keyword)) 
             {
-                // console.log('valid');        
                 this.filter(keyword);
             } else {
-                // console.log('invalid');        
                 this.hide()
             }
         }
     },
 
-    isChanged: function (keyword) {
+    isChanged: function (keyword) 
+    {
         var res = this.currentText === keyword;
-        // console.log([this.currentText,keyword,!res]);        
         this.currentText = keyword;
         return !res;
     },   
@@ -126,8 +124,8 @@ var AutoCompleteView = Backbone.View.extend(
         return keyword.length > this.minKeywordLength
     },
 
-    filter: function (keyword) {
-
+    filter: function (keyword) 
+    {
         // convert to lower case.
     	var checkword = keyword.toLowerCase();
         
@@ -145,8 +143,7 @@ var AutoCompleteView = Backbone.View.extend(
             });
 
         } else if (keyword == '?') {
-
-            // console.log('got the ?');   
+ 
             this.model.models.sort('time');
             this.loadResult(this.model.models, keyword);
             
