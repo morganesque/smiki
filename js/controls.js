@@ -4,21 +4,21 @@ $(document).on("ready",function(e)
     {
         console.log("on add_link click");        
         e.preventDefault();
-        current_textarea = $('.editor');  
-        var sel = current_textarea.textrange('get').text;
+        page_editor.current_page.textarea = $('.editor');  
+        var sel = page_editor.current_page.textarea.textrange('get').text;
         if (!sel)
         {
             alert('You need to select some text to turn into a link. – 0w12');
             return false;
         }
-        showOverlay();
+        page_editor.showOverlay();
     });
 
     $('#view_page').on("click",function(e)
     {        
         e.preventDefault();
-        var id = current_page.model.get('id');
-        current_page.model.save("id",id,{success:function()
+        var id = page_editor.current_page.model.get('id');
+        page_editor.current_page.model.save("id",id,{success:function()
         {
              window.location.href = SITEURL+'view/#'+id;
         }})
@@ -29,7 +29,7 @@ $(document).on("ready",function(e)
         e.preventDefault();
         if (confirm('Are you sure you want to delete this page?'))
         {
-            current_page.model.destroy();
+            page_editor.current_page.model.destroy();
             // current_page.remove();
             // the_pages.on('remove',function(model)
             // {
